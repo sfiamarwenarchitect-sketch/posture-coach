@@ -4,318 +4,533 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Posture Coach - Entraînement Intelligent</title>
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .anim { animation: fadeIn 0.3s ease-out; }
-    body { background: #f0fdf4; }
+    body { background: #f0fdf4; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    .btn { padding: 12px 24px; border-radius: 12px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; }
+    .btn-primary { background: #10b981; color: white; }
+    .btn-primary:hover { background: #059669; }
+    .btn-secondary { background: #e5e7eb; color: #374151; }
+    .btn-outline { background: transparent; border: 2px solid #10b981; color: #10b981; }
+    .card { background: white; border-radius: 16px; padding: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.08); }
+    .input { width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 16px; margin-top: 8px; }
+    .input:focus { outline: none; border-color: #10b981; box-shadow: 0 0 0 3px rgba(16,185,129,0.2); }
+    .badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+    .badge-emerald { background: #d1fae5; color: #059669; }
+    .hidden { display: none; }
+    .screen { display: none; }
+    .screen.active { display: block; }
   </style>
 </head>
 <body>
-  <div id="root"></div>
-  <script type="text/babel">
-    const { useState, createElement } = React;
+<div id="app" class="min-h-screen p-4">
 
-    function Btn(props) {
-      const v = props.variant || 'primary';
-      const cls = "font-semibold rounded-xl py-3 px-6 transition-all duration-200 " + (props.fullWidth ? "w-full " : "") +
-        (v === 'primary' ? "bg-emerald-500 text-white hover:bg-emerald-600 shadow-lg" :
-         v === 'secondary' ? "bg-gray-200 text-gray-700 hover:bg-gray-300" :
-         v === 'outline' ? "border-2 border-emerald-500 text-emerald-500 hover:bg-emerald-50" :
-         "bg-red-500 text-white hover:bg-red-600");
-      return createElement("button", { className: cls, onClick: props.onClick }, props.children);
+<!-- ============ MODE SELECTION ============ -->
+<div id="screen-mode" class="screen active anim">
+  <div class="max-w-md mx-auto text-center">
+    <div class="bg-emerald-500 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+      <span class="text-white text-3xl">✓</span>
+    </div>
+    <h1 class="text-2xl font-bold text-emerald-700 mb-2">POSTURE COACH</h1>
+    <p class="text-gray-600 mb-8">Application d'entraînement intelligent</p>
+    <button class="btn btn-primary w-full mb-4" onclick="showScreen('coach-login')">Mode Coach</button>
+    <p class="text-gray-500 my-4">OU</p>
+    <button class="btn btn-outline w-full" onclick="showScreen('user-home')">Mode Utilisateur</button>
+  </div>
+</div>
+
+<!-- ============ COACH LOGIN ============ -->
+<div id="screen-coach-login" class="screen anim">
+  <div class="max-w-md mx-auto">
+    <div class="text-center mb-8">
+      <div class="bg-emerald-500 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+        <span class="text-white text-3xl">✓</span>
+      </div>
+      <h1 class="text-2xl font-bold text-emerald-700">POSTURE COACH</h1>
+      <p class="text-gray-600 mt-2">Accès réservé aux coachs agréés</p>
+    </div>
+    <div class="card space-y-4">
+      <h2 class="text-xl font-bold text-gray-800 mb-4">Connexion coach</h2>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Email</label>
+        <input type="email" class="input" placeholder="coach@email.com" value="coach.marc@email.com">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Mot de passe</label>
+        <input type="password" class="input" placeholder="••••••••">
+      </div>
+      <div class="flex items-center justify-between text-sm">
+        <label class="flex items-center">
+          <input type="checkbox" class="mr-2"> Se souvenir de moi
+        </label>
+        <a href="#" class="text-emerald-500 hover:underline">Mot de passe oublié ?</a>
+      </div>
+      <button class="btn btn-primary w-full" onclick="showScreen('dashboard')">Se connecter</button>
+      <div class="text-center text-gray-500 my-4">OU</div>
+      <button class="btn btn-outline w-full">Se connecter avec Face ID</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ COACH DASHBOARD ============ -->
+<div id="screen-dashboard" class="screen anim">
+  <div class="bg-white shadow-md p-4 mb-4">
+    <h1 class="text-xl font-bold text-emerald-700">Tableau de bord</h1>
+    <p class="text-gray-600">Clients avec pack standard actif</p>
+  </div>
+  <div class="p-4">
+    <input type="text" class="input mb-4" placeholder="Rechercher un client...">
+    <div class="space-y-3">
+      <div class="card flex items-center space-x-4 cursor-pointer hover:bg-emerald-50" onclick="showScreen('client')">
+        <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold">SM</div>
+        <div class="flex-1">
+          <h3 class="font-semibold text-gray-800">Sarah Martin</h3>
+          <p class="text-sm text-gray-500">sarah@email.com</p>
+          <p class="text-sm text-emerald-600">1/10 exercices</p>
+        </div>
+      </div>
+      <div class="card flex items-center space-x-4 cursor-pointer hover:bg-emerald-50" onclick="showScreen('client')">
+        <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold">TB</div>
+        <div class="flex-1">
+          <h3 class="font-semibold text-gray-800">Thomas Bernard</h3>
+          <p class="text-sm text-gray-500">thomas@email.com</p>
+          <p class="text-sm text-emerald-600">3/10 exercices</p>
+        </div>
+      </div>
+      <div class="card flex items-center space-x-4 cursor-pointer hover:bg-emerald-50" onclick="showScreen('client')">
+        <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold">LP</div>
+        <div class="flex-1">
+          <h3 class="font-semibold text-gray-800">Laura Petit</h3>
+          <p class="text-sm text-gray-500">laura@email.com</p>
+          <p class="text-sm text-emerald-600">2/10 exercices</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fixed bottom-0 left-0 right-0 bg-white shadow-inner py-3 px-4 flex justify-around">
+    <div class="text-emerald-600 text-center text-xs">Clients</div>
+    <div class="text-gray-400 text-center text-xs">Séances</div>
+    <div class="text-gray-400 text-center text-xs">Profil</div>
+  </div>
+</div>
+
+<!-- ============ CLIENT PROFILE ============ -->
+<div id="screen-client" class="screen anim">
+  <div class="bg-white shadow-md p-4 mb-4">
+    <h1 class="text-xl font-bold text-emerald-700">Sarah Martin</h1>
+    <div class="flex items-center space-x-2 mt-2">
+      <span class="badge badge-emerald">Pack Standard</span>
+      <span class="text-gray-600 text-sm">Acheté le 12/05/2026</span>
+    </div>
+  </div>
+  <div class="p-4 space-y-4">
+    <div class="card flex items-center space-x-4">
+      <div class="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold text-xl">SM</div>
+      <div class="flex-1">
+        <h3 class="font-semibold">Sarah Martin</h3>
+        <p class="text-gray-600">sarah@email.com</p>
+        <p class="text-gray-600">06 12 34 56 78</p>
+        <p class="text-gray-600">1,68 m</p>
+      </div>
+    </div>
+    <div class="card text-center py-8">
+      <h3 class="text-gray-700 font-semibold mb-4">Exercices enregistrés</h3>
+      <p class="text-gray-500 mb-4">Aucun exercice enregistré</p>
+      <button class="btn btn-primary w-full" onclick="showScreen('library')">+ Nouvel exercice</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ EXERCISE LIBRARY ============ -->
+<div id="screen-library" class="screen anim">
+  <div class="bg-white shadow-md p-4 mb-4">
+    <h1 class="text-xl font-bold text-emerald-700">Bibliothèque d'exercices</h1>
+  </div>
+  <div class="p-4 grid grid-cols-2 gap-4">
+    <div class="card text-center cursor-pointer hover:bg-emerald-50" onclick="showScreen('config')">
+      <div class="text-4xl mb-2">🏋️‍♀️</div>
+      <h3 class="font-semibold text-gray-800">Squat</h3>
+      <span class="text-xs text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full mt-2 inline-block">Dynamique</span>
+    </div>
+    <div class="card text-center cursor-pointer hover:bg-emerald-50" onclick="showScreen('config')">
+      <div class="text-4xl mb-2">💪</div>
+      <h3 class="font-semibold text-gray-800">Pompe</h3>
+      <span class="text-xs text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full mt-2 inline-block">Dynamique</span>
+    </div>
+    <div class="card text-center cursor-pointer hover:bg-emerald-50" onclick="showScreen('config')">
+      <div class="text-4xl mb-2">🦵</div>
+      <h3 class="font-semibold text-gray-800">Fente</h3>
+      <span class="text-xs text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full mt-2 inline-block">Dynamique</span>
+    </div>
+    <div class="card text-center cursor-pointer hover:bg-emerald-50" onclick="showScreen('config')">
+      <div class="text-4xl mb-2">🧘</div>
+      <h3 class="font-semibold text-gray-800">Gainage</h3>
+      <span class="text-xs text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full mt-2 inline-block">Statique</span>
+    </div>
+    <div class="card text-center cursor-pointer hover:bg-emerald-50" onclick="showScreen('config')">
+      <div class="text-4xl mb-2">🏋️</div>
+      <h3 class="font-semibold text-gray-800">Soulevé de terre</h3>
+      <span class="text-xs text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full mt-2 inline-block">Dynamique</span>
+    </div>
+    <div class="card text-center cursor-pointer hover:bg-emerald-50" onclick="showScreen('config')">
+      <div class="text-4xl mb-2">💪</div>
+      <h3 class="font-semibold text-gray-800">Tractions</h3>
+      <span class="text-xs text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full mt-2 inline-block">Dynamique</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ KEY POINTS CONFIG ============ -->
+<div id="screen-config" class="screen anim">
+  <div class="bg-white shadow-md p-4 mb-4">
+    <h1 class="text-xl font-bold text-emerald-700">Squat</h1>
+  </div>
+  <div class="p-4">
+    <h2 class="text-gray-700 font-semibold mb-4">Sélectionnez les points clés à surveiller</h2>
+    <div class="card space-y-3">
+      <div class="flex items-center justify-between p-3 rounded-xl bg-emerald-50 border-2 border-emerald-500 cursor-pointer">
+        <span class="text-gray-700">Genoux</span>
+        <span class="text-emerald-500 text-xl">✓</span>
+      </div>
+      <div class="flex items-center justify-between p-3 rounded-xl bg-emerald-50 border-2 border-emerald-500 cursor-pointer">
+        <span class="text-gray-700">Hanches</span>
+        <span class="text-emerald-500 text-xl">✓</span>
+      </div>
+      <div class="flex items-center justify-between p-3 rounded-xl bg-emerald-50 border-2 border-emerald-500 cursor-pointer">
+        <span class="text-gray-700">Bas du dos</span>
+        <span class="text-emerald-500 text-xl">✓</span>
+      </div>
+      <div class="flex items-center justify-between p-3 rounded-xl bg-emerald-50 border-2 border-emerald-500 cursor-pointer">
+        <span class="text-gray-700">Chevilles</span>
+        <span class="text-emerald-500 text-xl">✓</span>
+      </div>
+      <div class="flex items-center justify-between p-3 rounded-xl bg-gray-50 cursor-pointer">
+        <span class="text-gray-700">Épaules</span>
+        <span class="text-gray-400 text-xl">○</span>
+      </div>
+      <div class="flex items-center justify-between p-3 rounded-xl bg-gray-50 cursor-pointer">
+        <span class="text-gray-700">Nuque</span>
+        <span class="text-gray-400 text-xl">○</span>
+      </div>
+    </div>
+    <button class="btn btn-primary w-full mt-4" onclick="showScreen('capture')">Valider et continuer</button>
+  </div>
+</div>
+
+<!-- ============ VIDEO CAPTURE ============ -->
+<div id="screen-capture" class="screen anim">
+  <div class="bg-white shadow-md p-4 mb-4">
+    <h1 class="text-xl font-bold text-emerald-700">Vue 1 – Face</h1>
+  </div>
+  <div class="p-4">
+    <div class="card text-center py-4 mb-4">
+      <p class="text-gray-700">Placez le client face à la caméra, à environ 2 mètres</p>
+      <p class="text-red-500 font-bold text-lg mt-2">Distance idéale</p>
+    </div>
+    <div class="relative bg-gray-800 rounded-2xl overflow-hidden h-96 flex items-center justify-center my-4">
+      <div class="text-white text-center">
+        <div class="text-6xl mb-4">🏋️‍♀️</div>
+        <p class="text-gray-300">Prêt pour la capture</p>
+      </div>
+    </div>
+    <div class="flex justify-center space-x-4 mt-4">
+      <button class="bg-gray-200 p-3 rounded-xl">⚡</button>
+      <button class="bg-gray-200 p-3 rounded-xl">📷</button>
+      <button class="p-4 rounded-full bg-emerald-500">●</button>
+    </div>
+    <p class="text-center text-gray-500 mt-2">Appuyez pour démarrer (5 secondes)</p>
+    <button class="btn btn-primary w-full mt-4" onclick="showScreen('verify')">Vérifier la capture</button>
+  </div>
+</div>
+
+<!-- ============ VERIFICATION ============ -->
+<div id="screen-verify" class="screen anim">
+  <div class="bg-white shadow-md p-4 mb-4">
+    <h1 class="text-xl font-bold text-emerald-700">Vérification – Vue 1 (Face)</h1>
+  </div>
+  <div class="p-4">
+    <div class="relative bg-gray-800 rounded-2xl overflow-hidden h-96 flex items-center justify-center">
+      <div class="text-white text-center">
+        <div class="text-6xl mb-4">🏋️‍♀️</div>
+        <p class="text-gray-300">Squelette détecté</p>
+      </div>
+    </div>
+    <div class="mt-4">
+      <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div class="h-full bg-emerald-500 w-3/4"></div>
+      </div>
+      <p class="text-center text-gray-500 mt-1">0:02 / 0:05</p>
+    </div>
+    <div class="bg-emerald-50 p-4 rounded-xl mt-4">
+      <div class="flex items-center space-x-2">
+        <span class="text-emerald-500 text-xl">✓</span>
+        <span class="text-emerald-700 font-semibold">Tous les points clés sont bien détectés</span>
+      </div>
+    </div>
+    <div class="flex space-x-3 mt-4">
+      <button class="btn btn-secondary flex-1">Refaire</button>
+      <button class="btn btn-outline flex-1">Supprimer</button>
+      <button class="btn btn-primary flex-1" onclick="showScreen('summary')">Valider</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SUMMARY ============ -->
+<div id="screen-summary" class="screen anim">
+  <div class="bg-white shadow-md p-4 mb-4">
+    <h1 class="text-xl font-bold text-emerald-700">Récapitulatif</h1>
+  </div>
+  <div class="p-4">
+    <div class="card text-center py-8">
+      <h2 class="text-xl font-bold text-gray-800 mb-4">Squat</h2>
+      <div class="flex justify-center space-x-4 mb-4">
+        <div class="bg-gray-100 p-3 rounded-xl">
+          <p class="text-sm text-gray-600">Vue Face</p>
+          <div class="w-20 h-20 bg-gray-200 rounded-lg mt-2 flex items-center justify-center text-2xl">🏋️‍♀️</div>
+        </div>
+        <div class="bg-gray-100 p-3 rounded-xl">
+          <p class="text-sm text-gray-600">Vue Profil</p>
+          <div class="w-20 h-20 bg-gray-200 rounded-lg mt-2 flex items-center justify-center text-2xl">🏋️‍♀️</div>
+        </div>
+      </div>
+      <div class="bg-gray-50 p-4 rounded-xl mt-4">
+        <h3 class="font-semibold text-gray-700 mb-2">Points clés surveillés</h3>
+        <div class="flex flex-wrap gap-2">
+          <span class="badge badge-emerald">Genoux</span>
+          <span class="badge badge-emerald">Hanches</span>
+          <span class="badge badge-emerald">Bas du dos</span>
+          <span class="badge badge-emerald">Chevilles</span>
+        </div>
+      </div>
+      <p class="text-gray-500 mt-4">Date d'enregistrement: 24/05/2024 à 10:30</p>
+    </div>
+    <button class="btn btn-primary w-full mt-4" onclick="showScreen('success')">Sauvegarder</button>
+  </div>
+</div>
+
+<!-- ============ SUCCESS ============ -->
+<div id="screen-success" class="screen anim">
+  <div class="min-h-screen flex items-center justify-center">
+    <div class="text-center p-8">
+      <div class="bg-emerald-500 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6">
+        <span class="text-white text-3xl">✓</span>
+      </div>
+      <h1 class="text-2xl font-bold text-emerald-700 mb-4">Enregistré avec succès !</h1>
+      <p class="text-gray-600 mb-8">Squat enregistré avec succès. Sarah peut désormais s'entraîner en autonomie.</p>
+      <button class="btn btn-primary w-full" onclick="showScreen('dashboard')">Retour au tableau de bord</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ USER HOME ============ -->
+<div id="screen-user-home" class="screen anim">
+  <div class="bg-white shadow-md p-4 mb-4">
+    <h1 class="text-xl font-bold text-emerald-700">Bonjour Sarah 👋</h1>
+    <p class="text-gray-600">Prête pour ta séance ?</p>
+  </div>
+  <div class="p-4">
+    <h2 class="text-lg font-bold text-gray-800 mb-4">MES EXERCICES</h2>
+    <div class="space-y-3">
+      <div class="card flex items-center space-x-4 cursor-pointer hover:bg-emerald-50" onclick="showScreen('view-select')">
+        <div class="text-4xl">🏋️‍♀️</div>
+        <div class="flex-1">
+          <h3 class="font-semibold text-gray-800">Squat</h3>
+          <p class="text-sm text-emerald-600">Coaché par ton coach</p>
+          <p class="text-sm text-gray-500">Niveau Intermédiaire</p>
+        </div>
+      </div>
+      <div class="card flex items-center space-x-4 cursor-pointer hover:bg-emerald-50" onclick="showScreen('view-select')">
+        <div class="text-4xl">🦵</div>
+        <div class="flex-1">
+          <h3 class="font-semibold text-gray-800">Fentes</h3>
+          <p class="text-sm text-gray-500">Niveau Intermédiaire</p>
+        </div>
+      </div>
+      <div class="card flex items-center space-x-4 cursor-pointer hover:bg-emerald-50" onclick="showScreen('view-select')">
+        <div class="text-4xl">🧘</div>
+        <div class="flex-1">
+          <h3 class="font-semibold text-gray-800">Gainage</h3>
+          <p class="text-sm text-gray-500">Niveau Intermédiaire</p>
+        </div>
+      </div>
+      <div class="card flex items-center space-x-4 cursor-pointer hover:bg-emerald-50" onclick="showScreen('view-select')">
+        <div class="text-4xl">🏋️</div>
+        <div class="flex-1">
+          <h3 class="font-semibold text-gray-800">Soulevé de terre</h3>
+          <p class="text-sm text-gray-500">Niveau Avancé</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fixed bottom-0 left-0 right-0 bg-white shadow-inner py-3 px-4 flex justify-around">
+    <div class="text-emerald-600 text-center text-xs">Accueil</div>
+    <div class="text-gray-400 text-center text-xs">Historique</div>
+    <div class="text-gray-400 text-center text-xs">Progression</div>
+    <div class="text-gray-400 text-center text-xs">Profil</div>
+  </div>
+</div>
+
+<!-- ============ VIEW SELECT ============ -->
+<div id="screen-view-select" class="screen anim">
+  <div class="bg-white shadow-md p-4 mb-4">
+    <h1 class="text-xl font-bold text-emerald-700">Choix de la vue</h1>
+  </div>
+  <div class="p-4">
+    <h2 class="text-lg font-bold text-gray-800 mb-4">Quelle vue utiliser pour cette séance ?</h2>
+    <button class="btn btn-primary w-full mb-4" onclick="showScreen('calibration')">Vue de face</button>
+    <p class="text-center text-gray-500 my-4">OU</p>
+    <button class="btn btn-outline w-full mb-4" onclick="showScreen('calibration')">Vue de profil</button>
+    <div class="bg-emerald-50 p-4 rounded-xl">
+      <p class="text-emerald-700 text-sm">Conseil : Assure-toi d'avoir assez d'espace pour être entièrement visible.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CALIBRATION ============ -->
+<div id="screen-calibration" class="screen anim">
+  <div class="bg-white shadow-md p-4 mb-4">
+    <h1 class="text-xl font-bold text-emerald-700">Calibration</h1>
+  </div>
+  <div class="p-4">
+    <div class="flex justify-center space-x-2 mb-4">
+      <div class="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center text-white text-sm">1</div>
+      <div class="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center text-white text-sm">2</div>
+    </div>
+    <div class="card text-center py-8">
+      <div class="relative bg-gray-200 rounded-2xl h-64 flex items-center justify-center">
+        <div class="text-6xl">🏃‍♀️</div>
+      </div>
+    </div>
+    <div class="bg-blue-50 p-4 rounded-xl mt-4">
+      <p class="text-blue-700 font-semibold">Distance mesurée : 1,85 m</p>
+      <p class="text-blue-600 text-sm">Veuillez reculer de 15 cm</p>
+    </div>
+    <button class="btn btn-primary w-full mt-4">Valider distance</button>
+  </div>
+</div>
+
+<!-- ============ EXERCISE ============ -->
+<div id="screen-exercise" class="screen anim">
+  <div class="bg-white shadow-md p-4 mb-4">
+    <h1 class="text-xl font-bold text-emerald-700">Squat</h1>
+  </div>
+  <div class="p-4">
+    <div class="relative bg-gray-800 rounded-2xl h-96 flex items-center justify-center">
+      <div class="text-white text-center">
+        <div class="text-6xl mb-4">🏋️‍♀️</div>
+        <p class="text-gray-300">Entraînement en cours</p>
+      </div>
+      <div class="absolute top-4 right-4">
+        <div class="w-16 h-16 rounded-full bg-emerald-500 flex items-center justify-center">
+          <span class="text-white font-bold">85%</span>
+        </div>
+      </div>
+    </div>
+    <div class="mt-4">
+      <p class="text-center text-gray-500">Squat | Série 1/3 | 3 répétitions</p>
+      <p class="text-center text-gray-500">Temps: 00:28</p>
+    </div>
+    <div class="flex space-x-3 mt-4">
+      <button class="btn btn-secondary flex-1">Terminer</button>
+      <button class="btn btn-primary flex-1">Rejouer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SETTINGS ============ -->
+<div id="screen-settings" class="screen anim">
+  <div class="bg-white shadow-md p-4 mb-4">
+    <h1 class="text-xl font-bold text-emerald-700">Paramètres</h1>
+  </div>
+  <div class="p-4 space-y-4">
+    <div class="card">
+      <h3 class="font-semibold text-gray-700 mb-2">Hauteur / Poids</h3>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm text-gray-600">Taille</label>
+          <input type="text" class="input" value="175 cm">
+        </div>
+        <div>
+          <label class="text-sm text-gray-600">Poids</label>
+          <input type="text" class="input" value="65 kg">
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3 class="font-semibold text-gray-700 mb-2">Retour sonore</h3>
+      <div class="flex items-center justify-between">
+        <span class="text-gray-600">Bip / Voix de synthèse</span>
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" class="sr-only peer" checked>
+          <div class="w-11 h-6 bg-gray-200 peer-checked:bg-emerald-500 rounded-full"></div>
+          <div class="w-5 h-5 bg-white border-2 border-gray-300 peer-checked:border-emerald-500 rounded-full absolute left-0.5 peer-checked:translate-x-5"></div>
+        </label>
+      </div>
+    </div>
+    <div class="card text-center py-8">
+      <h3 class="font-semibold text-red-600 mb-2">Supprimer mes données</h3>
+      <p class="text-gray-600 text-sm mb-4">Effacer l'ensemble de vos données biométriques</p>
+      <button class="btn bg-red-500 text-white w-full">Supprimer mes données</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ HISTORIQUE ============ -->
+<div id="screen-history" class="screen anim">
+  <div class="bg-white shadow-md p-4 mb-4">
+    <h1 class="text-xl font-bold text-emerald-700">Historique</h1>
+  </div>
+  <div class="p-4 space-y-3">
+    <div class="card flex items-center justify-between">
+      <div>
+        <h3 class="font-semibold text-gray-800">Squat</h3>
+        <p class="text-sm text-gray-500">10.08.2023</p>
+      </div>
+      <div class="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center">
+        <span class="text-white font-bold text-sm">89%</span>
+      </div>
+    </div>
+    <div class="card flex items-center justify-between">
+      <div>
+        <h3 class="font-semibold text-gray-800">Squat</h3>
+        <p class="text-sm text-gray-500">21.08.2023</p>
+      </div>
+      <div class="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center">
+        <span class="text-white font-bold text-sm">94%</span>
+      </div>
+    </div>
+    <div class="card flex items-center justify-between">
+      <div>
+        <h3 class="font-semibold text-gray-800">Squat</h3>
+        <p class="text-sm text-gray-500">16.09.2023</p>
+      </div>
+      <div class="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center">
+        <span class="text-white font-bold text-sm">78%</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+  // Système de navigation entre les écrans
+  function showScreen(screenId) {
+    // Masquer tous les écrans
+    const screens = document.querySelectorAll('.screen');
+    screens.forEach(s => s.classList.remove('active'));
+    // Afficher l'écran demandé
+    const target = document.getElementById('screen-' + screenId);
+    if (target) {
+      target.classList.add('active');
+      window.scrollTo(0, 0);
     }
+  }
 
-    function Inp(props) {
-      return createElement("div", { className: "mb-4" },
-        createElement("label", { className: "block text-sm font-medium text-gray-700 mb-1" }, props.label),
-        createElement("input", { type: props.type || "text", placeholder: props.placeholder, value: props.value, onChange: props.onChange, className: "w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500" })
-      );
-    }
-
-    function C(props) {
-      return createElement("div", { className: "bg-white rounded-2xl shadow-md p-4 " + (props.className || "") }, props.children);
-    }
-
-    function CoachLogin() {
-      const [email, setEmail] = useState('coach.marc@email.com');
-      const [pass, setPass] = useState('');
-      return createElement("div", { className: "min-h-screen bg-gradient-to-br from-emerald-50 to-emerald-100 p-6 anim" },
-        createElement("div", { className: "max-w-md mx-auto" },
-          createElement("div", { className: "text-center mb-8" },
-            createElement("div", { className: "bg-emerald-500 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4" },
-              createElement("span", { className: "text-white text-3xl" }, "\u2713")
-            ),
-            createElement("h1", { className: "text-2xl font-bold text-emerald-700" }, "POSTURE COACH"),
-            createElement("p", { className: "text-gray-600 mt-2" }, "Acc\u00e8s r\u00e9serv\u00e9 aux coachs agr\u00e9\u00e9s")
-          ),
-          createElement(C, { className: "space-y-4" },
-            createElement("h2", { className: "text-xl font-bold text-gray-800 mb-4" }, "Connexion coach"),
-            Inp({ label: "Email", type: "email", value: email, onChange: e => setEmail(e.target.value), placeholder: "coach@email.com" }),
-            Inp({ label: "Mot de passe", type: "password", value: pass, onChange: e => setPass(e.target.value) }),
-            createElement("div", { className: "flex items-center justify-between text-sm" },
-              createElement("label", { className: "flex items-center" },
-                createElement("input", { type: "checkbox", className: "mr-2" }), "Se souvenir de moi"),
-              createElement("a", { href: "#", className: "text-emerald-500 hover:underline" }, "Mot de passe oubli\u00e9 ?")
-            ),
-            Btn({ fullWidth: true, onClick: window.goDashboard }, "Se connecter"),
-            createElement("div", { className: "text-center text-gray-500 my-4" }, "OU"),
-            Btn({ variant: "outline", fullWidth: true }, "Se connecter avec Face ID")
-          )
-        )
-      );
-    }
-
-    function CoachDashboard() {
-      const clients = [
-        { name: "Sarah Martin", email: "sarah@email.com", purchased: "12/05/2026", exercises: "1/10", avatar: "SM" },
-        { name: "Thomas Bernard", email: "thomas@email.com", purchased: "15/05/2026", exercises: "3/10", avatar: "TB" },
-        { name: "Laura Petit", email: "laura@email.com", purchased: "20/05/2026", exercises: "2/10", avatar: "LP" }
-      ];
-      return createElement("div", { className: "min-h-screen bg-gray-50 anim" },
-        createElement("div", { className: "bg-white shadow-md p-4" },
-          createElement("h1", { className: "text-xl font-bold text-emerald-700" }, "Tableau de bord"),
-          createElement("p", { className: "text-gray-600" }, "Clients avec pack standard actif")
-        ),
-        createElement("div", { className: "p-4" },
-          Inp({ placeholder: "Rechercher un client..." }),
-          createElement("div", { className: "space-y-3" },
-            clients.map(client => {
-              return createElement(C, { className: "flex items-center space-x-4 cursor-pointer hover:bg-emerald-50" },
-                createElement("div", { className: "w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold" }, client.avatar),
-                createElement("div", { className: "flex-1" },
-                  createElement("h3", { className: "font-semibold text-gray-800" }, client.name),
-                  createElement("p", { className: "text-sm text-gray-500" }, client.email),
-                  createElement("p", { className: "text-sm text-emerald-600" }, client.exercises + " exercices")
-                )
-              );
-            })
-          )
-        ),
-        createElement("div", { className: "fixed bottom-0 left-0 right-0 bg-white shadow-inner py-3 px-4 flex justify-around" },
-          createElement("div", { className: "text-emerald-600 text-center" }, createElement("span", { className: "text-xs" }, "Clients")),
-          createElement("div", { className: "text-gray-400 text-center" }, createElement("span", { className: "text-xs" }, "S\u00e9ances")),
-          createElement("div", { className: "text-gray-400 text-center" }, createElement("span", { className: "text-xs" }, "Profil"))
-        )
-      );
-    }
-
-    function ExerciseLibrary() {
-      const exercises = [
-        { name: "Squat", type: "Dynamique", icon: "\ud83d\udcaa" },
-        { name: "Pompe", type: "Dynamique", icon: "\ud83d\udcaa" },
-        { name: "Fente", type: "Dynamique", icon: "\ud83e\udeb2" },
-        { name: "Gainage", type: "Statique", icon: "\ud83e\uddd8" },
-        { name: "Soulev\u00e9 de terre", type: "Dynamique", icon: "\ud83c\udfcb" },
-        { name: "Tractions", type: "Dynamique", icon: "\ud83d\udcaa" }
-      ];
-      return createElement("div", { className: "min-h-screen bg-gray-50 anim" },
-        createElement("div", { className: "bg-white shadow-md p-4" },
-          createElement("h1", { className: "text-xl font-bold text-emerald-700" }, "Biblioth\u00e8que d'exercices")
-        ),
-        createElement("div", { className: "p-4 grid grid-cols-2 gap-4" },
-          exercises.map(ex => {
-            return createElement(C, { className: "text-center cursor-pointer hover:bg-emerald-50" },
-              createElement("div", { className: "text-4xl mb-2" }, ex.icon),
-              createElement("h3", { className: "font-semibold text-gray-800" }, ex.name),
-              createElement("span", { className: "text-xs text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full mt-2 inline-block" }, ex.type)
-            );
-          })
-        )
-      );
-    }
-
-    function KeyPointsConfig() {
-      const points = ['Genoux', 'Hanches', 'Bas du dos', 'Chevilles', "\u00c9paules", 'Nuque'];
-      const [selected, setSelected] = useState(['Genoux', 'Hanches', 'Bas du dos', 'Chevilles']);
-      const toggle = (p) => { setSelected(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p]); };
-      return createElement("div", { className: "min-h-screen bg-gray-50 anim" },
-        createElement("div", { className: "bg-white shadow-md p-4" },
-          createElement("h1", { className: "text-xl font-bold text-emerald-700" }, "Configuration")
-        ),
-        createElement("div", { className: "p-4" },
-          createElement("h2", { className: "text-gray-700 font-semibold mb-4" }, "S\u00e9lectionnez les points cl\u00e9s \u00e0 surveiller"),
-          createElement(C, { className: "space-y-3" },
-            points.map(p => {
-              const sel = selected.includes(p);
-              return createElement("div", { className: "flex items-center justify-between p-3 rounded-xl cursor-pointer " + (sel ? "bg-emerald-50 border-2 border-emerald-500" : "bg-gray-50"), onClick: () => toggle(p)},
-                createElement("span", { className: "text-gray-700" }, p),
-                createElement("span", { className: "text-xl " + (sel ? "text-emerald-500" : "text-gray-400") }, sel ? "\u2713" : "\u25cb")
-              );
-            })
-          ),
-          Btn({ fullWidth: true, onClick: window.goCapture }, "Valider et continuer")
-        )
-      );
-    }
-
-    function VideoCapture() {
-      const [rec, setRec] = useState(false);
-      return createElement("div", { className: "min-h-screen bg-gray-50 anim" },
-        createElement("div", { className: "bg-white shadow-md p-4" },
-          createElement("h1", { className: "text-xl font-bold text-emerald-700" }, "Capture vid\u00e9o")
-        ),
-        createElement("div", { className: "p-4" },
-          createElement(C, { className: "text-center py-4" },
-            createElement("p", { className: "text-gray-700 mb-2" }, "Placez le client face \u00e0 la cam\u00e9ra, \u00e0 environ 2 m\u00e8tres")
-          ),
-          createElement("div", { className: "relative bg-gray-800 rounded-2xl overflow-hidden h-96 flex items-center justify-center my-4" },
-            createElement("div", { className: "text-white text-center" },
-              createElement("div", { className: "text-6xl mb-4" }, "\ud83d\udcaa"),
-              createElement("p", { className: "text-gray-300" }, "Pr\u00eat pour la capture"),
-              rec && createElement("div", { className: "mt-4 bg-red-500 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto animate-pulse" },
-                createElement("span", { className: "text-2xl font-bold" }, "5")
-              )
-            )
-          ),
-          createElement("div", { className: "flex justify-center space-x-4 mt-4" },
-            createElement("button", { className: "bg-gray-200 p-3 rounded-xl" }, "\u26a1"),
-            createElement("button", { className: "bg-gray-200 p-3 rounded-xl" }, "\ud83d\udcf7"),
-            createElement("button", { className: "p-4 rounded-full " + (rec ? "bg-red-500" : "bg-emerald-500"), onClick: () => setRec(!rec)}, rec ? "\u25a0" : "\u25cf")
-          ),
-          createElement("p", { className: "text-center text-gray-500 mt-2" }, "Appuyez pour d\u00e9marrer (5 secondes)"),
-          Btn({ fullWidth: true, className: "mt-4", onClick: window.goVerify }, "V\u00e9rifier la capture")
-        )
-      );
-    }
-
-    function Verification() {
-      return createElement("div", { className: "min-h-screen bg-gray-50 anim" },
-        createElement("div", { className: "bg-white shadow-md p-4" },
-          createElement("h1", { className: "text-xl font-bold text-emerald-700" }, "V\u00e9rification")
-        ),
-        createElement("div", { className: "p-4" },
-          createElement("div", { className: "relative bg-gray-800 rounded-2xl overflow-hidden h-96 flex items-center justify-center" },
-            createElement("div", { className: "text-white text-center" },
-              createElement("div", { className: "text-6xl mb-4" }, "\ud83d\udcaa"),
-              createElement("p", { className: "text-gray-300" }, "Squelette d\u00e9tect\u00e9")
-            )
-          ),
-          createElement("div", { className: "mt-4" },
-            createElement("div", { className: "h-2 bg-gray-200 rounded-full overflow-hidden" },
-              createElement("div", { className: "h-full bg-emerald-500 w-3/4" })
-            ),
-            createElement("p", { className: "text-center text-gray-500 mt-1" }, "0:02 / 0:05")
-          ),
-          createElement("div", { className: "bg-emerald-50 p-4 rounded-xl mt-4" },
-            createElement("div", { className: "flex items-center space-x-2" },
-              createElement("span", { className: "text-emerald-500 text-xl" }, "\u2713"),
-              createElement("span", { className: "text-emerald-700 font-semibold" }, "Tous les points cl\u00e9s sont bien d\u00e9tect\u00e9s")
-            )
-          ),
-          createElement("div", { className: "flex space-x-3 mt-4" },
-            Btn({ className: "flex-1", variant: "secondary" }, "Refaire"),
-            Btn({ className: "flex-1", variant: "outline" }, "Supprimer"),
-            Btn({ className: "flex-1", onClick: window.goSummary }, "Valider")
-          )
-        )
-      );
-    }
-
-    function SummaryScreen() {
-      return createElement("div", { className: "min-h-screen bg-gray-50 anim" },
-        createElement("div", { className: "bg-white shadow-md p-4" },
-          createElement("h1", { className: "text-xl font-bold text-emerald-700" }, "\u00c9cran bloqu\u00e9 - En attente")
-        ),
-        createElement("div", { className: "p-4" },
-          createElement(C, { className: "text-center py-8" },
-            createElement("h2", { className: "text-xl font-bold text-gray-800 mb-4" }, "Posture Coach"),
-            createElement("p", { className: "text-gray-600 mb-4" }, "Application d'entra\u00eenement intelligent"),
-            createElement("p", { className: "text-gray-500" }, "Interface d\u00e9monstration")
-          )
-        )
-      );
-    }
-
-    function UserHome() {
-      const exercises = [
-        { name: "Squat", level: "Interm\u00e9diaire", icon: "\ud83d\udcaa" },
-        { name: "Fentes", level: "Interm\u00e9diaire", icon: "\ud83e\udeb2" },
-        { name: "Gainage", level: "Interm\u00e9diaire", icon: "\ud83e\uddd8" },
-        { name: "Soulev\u00e9 de terre", level: "Avanc\u00e9", icon: "\ud83c\udfcb" }
-      ];
-      return createElement("div", { className: "min-h-screen bg-gray-50 anim" },
-        createElement("div", { className: "bg-white shadow-md p-4" },
-          createElement("h1", { className: "text-xl font-bold text-emerald-700" }, "Bonjour Sarah \ud83d\udc4b"),
-          createElement("p", { className: "text-gray-600" }, "Pr\u00eate pour ta s\u00e9ance ?")
-        ),
-        createElement("div", { className: "p-4" },
-          createElement("h2", { className: "text-lg font-bold text-gray-800 mb-4" }, "MES EXERCICES"),
-          createElement("div", { className: "space-y-3" },
-            exercises.map((ex, i) => {
-              return createElement(C, { className: "flex items-center space-x-4 cursor-pointer hover:bg-emerald-50" },
-                createElement("div", { className: "text-4xl" }, ex.icon),
-                createElement("div", { className: "flex-1" },
-                  createElement("h3", { className: "font-semibold text-gray-800" }, ex.name),
-                  createElement("p", { className: "text-sm text-gray-500" }, ex.level)
-                )
-              );
-            })
-          )
-        ),
-        createElement("div", { className: "fixed bottom-0 left-0 right-0 bg-white shadow-inner py-3 px-4 flex justify-around" },
-          createElement("div", { className: "text-emerald-600 text-center" }, createElement("span", { className: "text-xs" }, "Accueil")),
-          createElement("div", { className: "text-gray-400 text-center" }, createElement("span", { className: "text-xs" }, "Historique")),
-          createElement("div", { className: "text-gray-400 text-center" }, createElement("span", { className: "text-xs" }, "Progression")),
-          createElement("div", { className: "text-gray-400 text-center" }, createElement("span", { className: "text-xs" }, "Profil"))
-        )
-      );
-    }
-
-    function App() {
-      const [screen, setScreen] = useState('mode');
-
-      // Fonctions de navigation
-      const goTo = {
-        mode: () => setScreen('mode'),
-        coachLogin: () => setScreen('coachLogin'),
-        dashboard: () => setScreen('dashboard'),
-        library: () => setScreen('library'),
-        config: () => setScreen('config'),
-        capture: () => setScreen('capture'),
-        verify: () => setScreen('verify'),
-        summary: () => setScreen('summary'),
-        userHome: () => setScreen('userHome')
-      };
-
-      // Exposer les fonctions globales
-      window.goDashboard = goTo.dashboard;
-      window.goLibrary = goTo.library;
-      window.goConfig = goTo.config;
-      window.goCapture = goTo.capture;
-      window.goVerify = goTo.verify;
-      window.goSummary = goTo.summary;
-
-      // Rendu selon l'\u00e9cran
-      if (screen === 'mode') {
-        return createElement("div", { className: "min-h-screen bg-gradient-to-br from-emerald-50 to-emerald-100 flex items-center justify-center p-6 anim" },
-          createElement("div", { className: "max-w-md text-center" },
-            createElement("div", { className: "bg-emerald-500 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4" },
-              createElement("span", { className: "text-white text-3xl" }, "\u2713")
-            ),
-            createElement("h1", { className: "text-2xl font-bold text-emerald-700 mb-2" }, "POSTURE COACH"),
-            createElement("p", { className: "text-gray-600 mb-8" }, "Application d'entra\u00eenement intelligent"),
-            Btn({ fullWidth: true, onClick: goTo.coachLogin }, "Mode Coach"),
-            createElement("p", { className: "text-gray-500 my-4" }, "OU"),
-            Btn({ fullWidth: true, variant: "outline", onClick: goTo.userHome }, "Mode Utilisateur")
-          )
-        );
-      }
-      if (screen === 'coachLogin') return CoachLogin();
-      if (screen === 'dashboard') return CoachDashboard();
-      if (screen === 'library') return ExerciseLibrary();
-      if (screen === 'config') return KeyPointsConfig();
-      if (screen === 'capture') return VideoCapture();
-      if (screen === 'verify') return Verification();
-      if (screen === 'summary') return SummaryScreen();
-      if (screen === 'userHome') return UserHome();
-      return null;
-    }
-
-    ReactDOM.render(createElement(App), document.getElementById('root'));
-  </script>
+  // Afficher l'écran par défaut
+  showScreen('mode');
+</script>
 </body>
 </html>
