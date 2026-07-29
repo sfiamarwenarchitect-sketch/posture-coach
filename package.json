@@ -1,0 +1,13 @@
+{
+  "name": "posture-coach",
+  "version": "1.0.0",
+  "description": "Posture Coach - Application d'entra\u00eenement intelligent",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve .",
+    "build": "echo 'Building...' && cp index.html dist/"
+  },
+  "dependencies": {
+    "serve": "^14.0.0"
+  }
+}
