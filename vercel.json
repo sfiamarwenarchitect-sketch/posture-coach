@@ -1,8 +1,7 @@
 {
-  "buildCommand": null,
+  "buildCommand": "echo 'no build required'",
   "outputDirectory": ".",
-  "framework": "create-react-app",
   "routes": [
-    { "src": "/(.*)", "dest": "/index.html" }
+    { "handle": "spa" }
   ]
 }
