@@ -1,7 +1,7 @@
 {
-  "buildCommand": "echo 'no build required'",
-  "outputDirectory": ".",
+  "buildCommand": "cp index.html dist/",
+  "outputDirectory": "dist",
   "routes": [
-    { "handle": "spa" }
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
