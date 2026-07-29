@@ -1,7 +1,8 @@
 {
-  "buildCommand": "cp index.html dist/",
-  "outputDirectory": "dist",
-  "routes": [
-    { "src": "/(.*)", "dest": "/index.html" }
+  "framework": false,
+  "buildCommand": "echo 'Building static site'",
+  "outputDirectory": ".",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
