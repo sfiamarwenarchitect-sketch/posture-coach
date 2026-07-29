@@ -1,7 +1,7 @@
 {
-  "framework": false,
-  "buildCommand": "echo 'Building static site'",
-  "outputDirectory": ".",
+  "framework": "create-react-app",
+  "buildCommand": "mkdir -p build && cp index.html build/",
+  "outputDirectory": "build",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
