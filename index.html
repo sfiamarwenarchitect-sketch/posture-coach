@@ -4,698 +4,318 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Posture Coach - Entraînement Intelligent</title>
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"><%/script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"><%/script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"><%/script>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fade { animation: fadeIn 0.3s ease-out; }
-    .skeleton { stroke: #10B981; stroke-width: 2; fill: none; }
-    .skeleton-ref { stroke: #FFFFFF; stroke-width: 2; fill: none; }
-    .score-ring { transition: all 0.3s ease; }
-    .badge-anim { animation: pop 0.5s ease; }
-    @keyframes pop {
-      0% { transform: scale(0.8); opacity: 0; }
-      50% { transform: scale(1.2); }
-      100% { transform: scale(1); opacity: 1; }
-    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .anim { animation: fadeIn 0.3s ease-out; }
+    body { background: #f0fdf4; }
   </style>
 </head>
 <body>
   <div id="root"></div>
-
   <script type="text/babel">
-    const { useState, useEffect } = React;
+    const { useState, createElement } = React;
 
-    // Composants UI
-    const Button = ({ children, variant = 'primary', fullWidth = false, onClick, className = '' }) => {
-      const baseClass = "font-semibold rounded-xl py-3 px-6 transition-all duration-200";
-      const variants = {
-        primary: "bg-emerald-500 text-white hover:bg-emerald-600 shadow-lg",
-        secondary: "bg-gray-200 text-gray-700 hover:bg-gray-300",
-        outline: "border-2 border-emerald-500 text-emerald-500 hover:bg-emerald-50",
-        danger: "bg-red-500 text-white hover:bg-red-600"
-      };
-      return React.createElement("button", {
-        className: `${baseClass} ${variants[variant]} ${fullWidth ? 'w-full' : ''} ${className}`,
-        onClick
-      }, children);
-    };
+    function Btn(props) {
+      const v = props.variant || 'primary';
+      const cls = "font-semibold rounded-xl py-3 px-6 transition-all duration-200 " + (props.fullWidth ? "w-full " : "") +
+        (v === 'primary' ? "bg-emerald-500 text-white hover:bg-emerald-600 shadow-lg" :
+         v === 'secondary' ? "bg-gray-200 text-gray-700 hover:bg-gray-300" :
+         v === 'outline' ? "border-2 border-emerald-500 text-emerald-500 hover:bg-emerald-50" :
+         "bg-red-500 text-white hover:bg-red-600");
+      return createElement("button", { className: cls, onClick: props.onClick }, props.children);
+    }
 
-    const Input = ({ label, type = 'text', placeholder, value, onChange, required }) => {
-      return React.createElement("div", { className: "mb-4" },
-        React.createElement("label", { className: "block text-sm font-medium text-gray-700 mb-1" }, label),
-        React.createElement("input", {
-          type, placeholder, value, onChange, required,
-          className: "w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-        })
+    function Inp(props) {
+      return createElement("div", { className: "mb-4" },
+        createElement("label", { className: "block text-sm font-medium text-gray-700 mb-1" }, props.label),
+        createElement("input", { type: props.type || "text", placeholder: props.placeholder, value: props.value, onChange: props.onChange, className: "w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500" })
       );
-    };
+    }
 
-    const Card = ({ children, className = '' }) => {
-      return React.createElement("div", { className: `bg-white rounded-2xl shadow-md p-4 ${className}` }, children);
-    };
+    function C(props) {
+      return createElement("div", { className: "bg-white rounded-2xl shadow-md p-4 " + (props.className || "") }, props.children);
+    }
 
-    // ECRANS COACH (C1-C10)
-    const CoachLoginScreen = ({ onNavigate }) => {
+    function CoachLogin() {
       const [email, setEmail] = useState('coach.marc@email.com');
-      const [password, setPassword] = useState('');
-      
-      return React.createElement("div", { className: "min-h-screen bg-gradient-to-br from-emerald-50 to-emerald-100 p-6 animate-fade" },
-        React.createElement("div", { className: "max-w-md mx-auto" },
-          React.createElement("div", { className: "text-center mb-8" },
-            React.createElement("div", { className: "bg-emerald-500 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4" },
-              React.createElement("svg", { viewBox: "0 0 24 24", className: "w-12 h-12 text-white" },
-                React.createElement("path", { d: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z", fill: "currentColor" })
-              )
+      const [pass, setPass] = useState('');
+      return createElement("div", { className: "min-h-screen bg-gradient-to-br from-emerald-50 to-emerald-100 p-6 anim" },
+        createElement("div", { className: "max-w-md mx-auto" },
+          createElement("div", { className: "text-center mb-8" },
+            createElement("div", { className: "bg-emerald-500 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4" },
+              createElement("span", { className: "text-white text-3xl" }, "\u2713")
             ),
-            React.createElement("h1", { className: "text-2xl font-bold text-emerald-700" }, "POSTURE COACH"),
-            React.createElement("p", { className: "text-gray-600 mt-2" }, "Accès réservé aux coachs agréés")
+            createElement("h1", { className: "text-2xl font-bold text-emerald-700" }, "POSTURE COACH"),
+            createElement("p", { className: "text-gray-600 mt-2" }, "Acc\u00e8s r\u00e9serv\u00e9 aux coachs agr\u00e9\u00e9s")
           ),
-          React.createElement(Card, { className: "space-y-4" },
-            React.createElement("h2", { className: "text-xl font-bold text-gray-800 mb-4" }, "Connexion coach"),
-            Input({ label: "Email", type: "email", value: email, onChange: (e) => setEmail(e.target.value) }),
-            Input({ label: "Mot de passe", type: "password", value: password, onChange: (e) => setPassword(e.target.value) }),
-            React.createElement("div", { className: "flex items-center justify-between text-sm" },
-              React.createElement("label", { className: "flex items-center" },
-                React.createElement("input", { type: "checkbox", className: "mr-2" }),
-                "Se souvenir de moi"
-              ),
-              React.createElement("a", { href: "#", className: "text-emerald-500 hover:underline" }, "Mot de passe oublié ?")
+          createElement(C, { className: "space-y-4" },
+            createElement("h2", { className: "text-xl font-bold text-gray-800 mb-4" }, "Connexion coach"),
+            Inp({ label: "Email", type: "email", value: email, onChange: e => setEmail(e.target.value), placeholder: "coach@email.com" }),
+            Inp({ label: "Mot de passe", type: "password", value: pass, onChange: e => setPass(e.target.value) }),
+            createElement("div", { className: "flex items-center justify-between text-sm" },
+              createElement("label", { className: "flex items-center" },
+                createElement("input", { type: "checkbox", className: "mr-2" }), "Se souvenir de moi"),
+              createElement("a", { href: "#", className: "text-emerald-500 hover:underline" }, "Mot de passe oubli\u00e9 ?")
             ),
-            Button({ fullWidth: true, onClick: () => onNavigate('dashboard') }, "Se connecter"),
-            React.createElement("div", { className: "text-center text-gray-500 my-4" }, "OU"),
-            Button({ variant: "outline", fullWidth: true }, "Se connecter avec Face ID")
+            Btn({ fullWidth: true, onClick: window.goDashboard }, "Se connecter"),
+            createElement("div", { className: "text-center text-gray-500 my-4" }, "OU"),
+            Btn({ variant: "outline", fullWidth: true }, "Se connecter avec Face ID")
           )
         )
       );
-    };
+    }
 
-    const CoachDashboardScreen = ({ onNavigate }) => {
+    function CoachDashboard() {
       const clients = [
         { name: "Sarah Martin", email: "sarah@email.com", purchased: "12/05/2026", exercises: "1/10", avatar: "SM" },
         { name: "Thomas Bernard", email: "thomas@email.com", purchased: "15/05/2026", exercises: "3/10", avatar: "TB" },
         { name: "Laura Petit", email: "laura@email.com", purchased: "20/05/2026", exercises: "2/10", avatar: "LP" }
       ];
-      
-      const [search, setSearch] = useState('');
-      
-      return React.createElement("div", { className: "min-h-screen bg-gray-50 animate-fade" },
-        React.createElement("div", { className: "bg-white shadow-md p-4" },
-          React.createElement("h1", { className: "text-xl font-bold text-emerald-700" }, "Tableau de bord"),
-          React.createElement("p", { className: "text-gray-600" }, "Clients avec pack standard actif")
+      return createElement("div", { className: "min-h-screen bg-gray-50 anim" },
+        createElement("div", { className: "bg-white shadow-md p-4" },
+          createElement("h1", { className: "text-xl font-bold text-emerald-700" }, "Tableau de bord"),
+          createElement("p", { className: "text-gray-600" }, "Clients avec pack standard actif")
         ),
-        React.createElement("div", { className: "p-4" },
-          React.createElement(Input, { 
-            placeholder: "Rechercher un client...", 
-            value: search, 
-            onChange: (e) => setSearch(e.target.value) 
-          }),
-          React.createElement("div", { className: "space-y-3" },
-            clients.map((client, index) =>
-              React.createElement(Card, { 
-                key: index, 
-                className: "flex items-center space-x-4 cursor-pointer hover:bg-emerald-50",
-                onClick: () => onNavigate('client', client)
-              },
-                React.createElement("div", { className: "w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold" }, client.avatar),
-                React.createElement("div", { className: "flex-1" },
-                  React.createElement("h3", { className: "font-semibold text-gray-800" }, client.name),
-                  React.createElement("p", { className: "text-sm text-gray-500" }, client.email),
-                  React.createElement("p", { className: "text-sm text-emerald-600" }, client.exercises + " exercices")
+        createElement("div", { className: "p-4" },
+          Inp({ placeholder: "Rechercher un client..." }),
+          createElement("div", { className: "space-y-3" },
+            clients.map(client => {
+              return createElement(C, { className: "flex items-center space-x-4 cursor-pointer hover:bg-emerald-50" },
+                createElement("div", { className: "w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold" }, client.avatar),
+                createElement("div", { className: "flex-1" },
+                  createElement("h3", { className: "font-semibold text-gray-800" }, client.name),
+                  createElement("p", { className: "text-sm text-gray-500" }, client.email),
+                  createElement("p", { className: "text-sm text-emerald-600" }, client.exercises + " exercices")
                 )
-              )
-            )
+              );
+            })
           )
         ),
-        React.createElement("div", { className: "fixed bottom-0 left-0 right-0 bg-white shadow-inner py-3 px-4 flex justify-around" },
-          React.createElement("div", { className: "text-emerald-600 text-center" },
-            React.createElement("svg", { className: "w-6 h-6 mx-auto mb-1", fill: "none", stroke: "currentColor", "stroke-width": "2", viewBox: "0 0 24 24" },
-              React.createElement("path", { d: "M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" }),
-              React.createElement("circle", { cx: "9", cy: "7", r: "4" })
-            ),
-            React.createElement("span", { className: "text-xs" }, "Clients")
-          ),
-          React.createElement("div", { className: "text-gray-400 text-center" },
-            React.createElement("svg", { className: "w-6 h-6 mx-auto mb-1", fill: "none", stroke: "currentColor", "stroke-width": "2", viewBox: "0 0 24 24" },
-              React.createElement("path", { d: "M15 12a3 3 0 11-6 0 3 3 0 016 0z" }),
-              React.createElement("path", { d: "M19.4 6.8a5 5 0 10-6.8 6.8l-2.8 2.8" })
-            ),
-            React.createElement("span", { className: "text-xs" }, "Séances")
-          ),
-          React.createElement("div", { className: "text-gray-400 text-center" },
-            React.createElement("svg", { className: "w-6 h-6 mx-auto mb-1", fill: "none", stroke: "currentColor", "stroke-width": "2", viewBox: "0 0 24 24" },
-              React.createElement("path", { d: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a6 6 0 00-6 6v2h12v-2a6 6 0 00-6-6z" })
-            ),
-            React.createElement("span", { className: "text-xs" }, "Profil")
-          )
+        createElement("div", { className: "fixed bottom-0 left-0 right-0 bg-white shadow-inner py-3 px-4 flex justify-around" },
+          createElement("div", { className: "text-emerald-600 text-center" }, createElement("span", { className: "text-xs" }, "Clients")),
+          createElement("div", { className: "text-gray-400 text-center" }, createElement("span", { className: "text-xs" }, "S\u00e9ances")),
+          createElement("div", { className: "text-gray-400 text-center" }, createElement("span", { className: "text-xs" }, "Profil"))
         )
       );
-    };
+    }
 
-    const ClientProfileScreen = ({ client, onNavigate }) => {
-      return React.createElement("div", { className: "min-h-screen bg-gray-50 animate-fade" },
-        React.createElement("div", { className: "bg-white shadow-md p-4" },
-          React.createElement("h1", { className: "text-xl font-bold text-emerald-700" }, client.name),
-          React.createElement("div", { className: "flex items-center space-x-2 mt-2" },
-            React.createElement("span", { className: "bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-sm font-medium" }, "Pack Standard"),
-            React.createElement("span", { className: "text-gray-600 text-sm" }, "Acheté le " + client.purchased)
-          )
-        ),
-        React.createElement("div", { className: "p-4 space-y-4" },
-          React.createElement(Card, { className: "flex items-center space-x-4" },
-            React.createElement("div", { className: "w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold text-xl" }, client.avatar),
-            React.createElement("div", { className: "flex-1" },
-              React.createElement("h3", { className: "font-semibold" }, client.name),
-              React.createElement("p", { className: "text-gray-600" }, client.email),
-              React.createElement("p", { className: "text-gray-600" }, "06 12 34 56 78"),
-              React.createElement("p", { className: "text-gray-600" }, "1,68 m")
-            )
-          ),
-          React.createElement(Card, { className: "text-center py-8" },
-            React.createElement("h3", { className: "text-gray-700 font-semibold mb-4" }, "Exercices enregistrés"),
-            React.createElement("p", { className: "text-gray-500" }, "Aucun exercice enregistré"),
-            Button({ fullWidth: true, onClick: () => onNavigate('library') }, "+ Nouvel exercice")
-          )
-        )
-      );
-    };
-
-    const ExerciseLibraryScreen = ({ onNavigate }) => {
+    function ExerciseLibrary() {
       const exercises = [
-        { name: "Squat", type: "Dynamique", icon: "🏋️‍♀️" },
-        { name: "Pompe", type: "Dynamique", icon: "💪" },
-        { name: "Fente", type: "Dynamique", icon: "🦵" },
-        { name: "Gainage", type: "Statique", icon: "🧘" },
-        { name: "Soulevé de terre", type: "Dynamique", icon: "🏋️" },
-        { name: "Tractions", type: "Dynamique", icon: "💪" }
+        { name: "Squat", type: "Dynamique", icon: "\ud83d\udcaa" },
+        { name: "Pompe", type: "Dynamique", icon: "\ud83d\udcaa" },
+        { name: "Fente", type: "Dynamique", icon: "\ud83e\udeb2" },
+        { name: "Gainage", type: "Statique", icon: "\ud83e\uddd8" },
+        { name: "Soulev\u00e9 de terre", type: "Dynamique", icon: "\ud83c\udfcb" },
+        { name: "Tractions", type: "Dynamique", icon: "\ud83d\udcaa" }
       ];
-      
-      return React.createElement("div", { className: "min-h-screen bg-gray-50 animate-fade" },
-        React.createElement("div", { className: "bg-white shadow-md p-4" },
-          React.createElement("h1", { className: "text-xl font-bold text-emerald-700" }, "Bibliothèque d'exercices")
+      return createElement("div", { className: "min-h-screen bg-gray-50 anim" },
+        createElement("div", { className: "bg-white shadow-md p-4" },
+          createElement("h1", { className: "text-xl font-bold text-emerald-700" }, "Biblioth\u00e8que d'exercices")
         ),
-        React.createElement("div", { className: "p-4 grid grid-cols-2 gap-4" },
-          exercises.map((exercise, index) =>
-            React.createElement(Card, { 
-              key: index,
-              className: `cursor-pointer transition-all hover:shadow-lg hover:scale-105 ${index === 0 ? 'ring-2 ring-emerald-500' : ''}`,
-              onClick: () => onNavigate('config', exercise)
-            },
-              React.createElement("div", { className: "text-center" },
-                React.createElement("div", { className: "text-4xl mb-2" }, exercise.icon),
-                React.createElement("h3", { className: "font-semibold text-gray-800" }, exercise.name),
-                React.createElement("span", { className: "text-xs text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full mt-2 inline-block" }, exercise.type)
-              )
-            )
-          )
-        )
-      );
-    };
-
-    const KeyPointsConfigScreen = ({ exercise, onNavigate }) => {
-      const [selectedPoints, setSelectedPoints] = useState(['Genoux', 'Hanches', 'Bas du dos', 'Chevilles']);
-      
-      const togglePoint = (point) => {
-        setSelectedPoints(prev => 
-          prev.includes(point) ? prev.filter(p => p !== point) : [...prev, point]
-        );
-      };
-      
-      const points = ['Genoux', 'Hanches', 'Bas du dos', 'Chevilles', 'Épaules', 'Nuque'];
-      
-      return React.createElement("div", { className: "min-h-screen bg-gray-50 animate-fade" },
-        React.createElement("div", { className: "bg-white shadow-md p-4" },
-          React.createElement("h1", { className: "text-xl font-bold text-emerald-700" }, exercise.name)
-        ),
-        React.createElement("div", { className: "p-4" },
-          React.createElement("h2", { className: "text-gray-700 font-semibold mb-4" }, "Sélectionnez les points clés à surveiller"),
-          React.createElement(Card, { className: "space-y-3" },
-            points.map((point, index) =>
-              React.createElement("div", { 
-                key: index, 
-                className: `flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all ${selectedPoints.includes(point) ? 'bg-emerald-50 border-2 border-emerald-500' : 'bg-gray-50'}`,
-                onClick: () => togglePoint(point)
-              },
-                React.createElement("span", { className: "text-gray-700" }, point),
-                selectedPoints.includes(point) 
-                  ? React.createElement("span", { className: "text-emerald-500 text-xl" }, "✓")
-                  : React.createElement("span", { className: "text-gray-400 text-xl" }, "○")
-              )
-            )
-          ),
-          Button({ fullWidth: true, onClick: () => onNavigate('capture1') }, "Valider et continuer")
-        )
-      );
-    };
-
-    const VideoCaptureScreen = ({ view, exercise, onNavigate }) => {
-      const [recording, setRecording] = useState(false);
-      const [timer, setTimer] = useState(5);
-      const [distanceOk, setDistanceOk] = useState(false);
-      
-      useEffect(() => {
-        if (recording) {
-          const interval = setInterval(() => {
-            setTimer(t => {
-              if (t <= 1) {
-                clearInterval(interval);
-                setRecording(false);
-                return 0;
-              }
-              return t - 1;
-            });
-          }, 1000);
-          return () => clearInterval(interval);
-        }
-      }, [recording]);
-      
-      return React.createElement("div", { className: "min-h-screen bg-gray-50 animate-fade" },
-        React.createElement("div", { className: "bg-white shadow-md p-4" },
-          React.createElement("h1", { className: "text-xl font-bold text-emerald-700" }, view === 1 ? "Vue 1 – Face" : "Vue 2 – Profil")
-        ),
-        React.createElement("div", { className: "p-4" },
-          React.createElement(Card, { className: "text-center py-4" },
-            React.createElement("p", { className: "text-gray-700 mb-2" }, 
-              view === 1 ? "Placez le client face à la caméra, à environ 2 mètres" : "Placez le client de profil droit (ou gauche) par rapport à la caméra"
-            ),
-            React.createElement("p", { className: "text-red-500 font-bold text-lg mb-2" }, 
-              !distanceOk ? "Distance idéale" : "Distance OK ✓"
-            )
-          ),
-          React.createElement("div", { className: "relative bg-gray-800 rounded-2xl overflow-hidden h-96 flex items-center justify-center my-4" },
-            React.createElement("div", { className: "text-white text-center" },
-              React.createElement("div", { className: "text-6xl mb-4" }, exercise.icon),
-              React.createElement("p", { className: "text-gray-300" }, "Prêt pour la capture"),
-              recording && React.createElement("div", { className: "mt-4" },
-                React.createElement("div", { className: "bg-red-500 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto animate-pulse" },
-                  React.createElement("span", { className: "text-2xl font-bold" }, timer)
-                )
-              )
-            )
-          ),
-          React.createElement("div", { className: "flex justify-center space-x-4 mt-4" },
-            React.createElement("button", { className: "bg-gray-200 p-3 rounded-xl" }, "⚡"),
-            React.createElement("button", { className: "bg-gray-200 p-3 rounded-xl" }, "📷"),
-            React.createElement("button", { 
-              className: `p-4 rounded-full ${recording ? 'bg-red-500' : 'bg-emerald-500'}`,
-              onClick: () => setRecording(!recording)
-            }, recording ? "■" : "●")
-          ),
-          React.createElement("p", { className: "text-center text-gray-500 mt-2" }, "Appuyez sur Enregistrer pour démarrer (5 secondes)"),
-          Button({ fullWidth: true, className: "mt-4", onClick: () => onNavigate('verify', view) }, "Vérifier la capture")
-        )
-      );
-    };
-
-    const VerificationScreen = ({ view, exercise, onNavigate }) => {
-      return React.createElement("div", { className: "min-h-screen bg-gray-50 animate-fade" },
-        React.createElement("div", { className: "bg-white shadow-md p-4" },
-          React.createElement("h1", { className: "text-xl font-bold text-emerald-700" }, `Vérification – Vue ${view === 1 ? '1 (Face)' : '2 (Profil)'}`)
-        ),
-        React.createElement("div", { className: "p-4" },
-          React.createElement("div", { className: "relative bg-gray-800 rounded-2xl overflow-hidden h-96 flex items-center justify-center" },
-            React.createElement("div", { className: "text-white text-center" },
-              React.createElement("div", { className: "text-6xl mb-4" }, exercise.icon),
-              React.createElement("p", { className: "text-gray-300" }, "Squelette de référence détecté")
-            )
-          ),
-          React.createElement("div", { className: "mt-4" },
-            React.createElement("div", { className: "h-2 bg-gray-200 rounded-full overflow-hidden" },
-              React.createElement("div", { className: "h-full bg-emerald-500 w-3/4" })
-            ),
-            React.createElement("p", { className: "text-center text-gray-500 mt-1" }, "0:02 / 0:05")
-          ),
-          React.createElement("div", { className: "bg-emerald-50 p-4 rounded-xl mt-4" },
-            React.createElement("div", { className: "flex items-center space-x-2" },
-              React.createElement("span", { className: "text-emerald-500 text-xl" }, "✓"),
-              React.createElement("span", { className: "text-emerald-700 font-semibold" }, "Tous les points clés sont bien détectés")
-            )
-          ),
-          React.createElement("div", { className: "flex space-x-3 mt-4" },
-            React.createElement(Button, { className: "flex-1", variant: "secondary", onClick: () => onNavigate('capture', view) }, "Refaire"),
-            React.createElement(Button, { className: "flex-1", variant: "outline", onClick: () => onNavigate('dashboard') }, "Supprimer"),
-            React.createElement(Button, { className: "flex-1", onClick: () => onNavigate('summary') }, "Valider")
-          )
-        )
-      );
-    };
-
-    const SummaryScreen = ({ exercise, onNavigate }) => {
-      return React.createElement("div", { className: "min-h-screen bg-gray-50 animate-fade" },
-        React.createElement("div", { className: "bg-white shadow-md p-4" },
-          React.createElement("h1", { className: "text-xl font-bold text-emerald-700" }, "Récapitulatif")
-        ),
-        React.createElement("div", { className: "p-4" },
-          React.createElement("p", { className: "text-gray-600 mb-4" }, "Vérifiez les informations avant de sauvegarder"),
-          React.createElement(Card, { className: "text-center py-8" },
-            React.createElement("div", { className: "text-6xl mb-4" }, exercise.icon),
-            React.createElement("h2", { className: "text-xl font-bold text-gray-800 mb-4" }, exercise.name),
-            React.createElement("div", { className: "flex justify-center space-x-4 mb-4" },
-              React.createElement("div", { className: "bg-gray-100 p-3 rounded-xl" },
-                React.createElement("p", { className: "text-sm text-gray-600" }, "Vue Face"),
-                React.createElement("div", { className: "w-20 h-20 bg-gray-200 rounded-lg mt-2 flex items-center justify-center" }, exercise.icon)
-              ),
-              React.createElement("div", { className: "bg-gray-100 p-3 rounded-xl" },
-                React.createElement("p", { className: "text-sm text-gray-600" }, "Vue Profil"),
-                React.createElement("div", { className: "w-20 h-20 bg-gray-200 rounded-lg mt-2 flex items-center justify-center" }, exercise.icon)
-              )
-            ),
-            React.createElement("div", { className: "bg-gray-50 p-4 rounded-xl mt-4" },
-              React.createElement("h3", { className: "font-semibold text-gray-700 mb-2" }, "Points clés surveillés"),
-              React.createElement("div", { className: "flex flex-wrap gap-2" },
-                ['Genoux', 'Hanches', 'Bas du dos', 'Chevilles'].map((point, i) =>
-                  React.createElement("span", { key: i, className: "bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-sm" }, point)
-                )
-              )
-            ),
-            React.createElement("p", { className: "text-gray-500 mt-4" }, "Date d'enregistrement: 24/05/2024 à 10:30")
-          ),
-          Button({ fullWidth: true, className: "mt-4", onClick: () => onNavigate('success') }, "Sauvegarder"),
-          React.createElement("div", { className: "bg-emerald-50 p-4 rounded-xl mt-4 text-center" },
-            React.createElement("span", { className: "text-emerald-500 text-2xl" }, "✓"),
-            React.createElement("p", { className: "text-emerald-700 font-semibold mt-2" }, "Squat enregistré avec succès. Sarah peut désormais s'entraîner en autonomie")
-          )
-        )
-      );
-    };
-
-    // ECRANS UTILISATEUR (1-11)
-    const UserHomeScreen = ({ onNavigate }) => {
-      const exercises = [
-        { name: "Squat", coach: "Coaché par ton coach", level: "Niveau Intermédiaire", icon: "🏋️‍♀️" },
-        { name: "Fentes", level: "Niveau Intermédiaire", icon: "🦵" },
-        { name: "Gainage", level: "Niveau Intermédiaire", icon: "🧘" },
-        { name: "Soulevé de terre", level: "Niveau Avancé", icon: "🏋️" }
-      ];
-      
-      return React.createElement("div", { className: "min-h-screen bg-gray-50 animate-fade" },
-        React.createElement("div", { className: "bg-white shadow-md p-4" },
-          React.createElement("h1", { className: "text-xl font-bold text-emerald-700" }, "Bonjour Sarah 👋"),
-          React.createElement("p", { className: "text-gray-600" }, "Prête pour ta séance ?")
-        ),
-        React.createElement("div", { className: "p-4" },
-          React.createElement("h2", { className: "text-lg font-bold text-gray-800 mb-4" }, "MES EXERCICES"),
-          React.createElement("div", { className: "space-y-3" },
-            exercises.map((exercise, index) =>
-              React.createElement(Card, { 
-                key: index,
-                className: "flex items-center space-x-4 cursor-pointer hover:bg-emerald-50",
-                onClick: () => onNavigate('view-select', exercise)
-              },
-                React.createElement("div", { className: "text-4xl" }, exercise.icon),
-                React.createElement("div", { className: "flex-1" },
-                  React.createElement("h3", { className: "font-semibold text-gray-800" }, exercise.name),
-                  exercise.coach && React.createElement("p", { className: "text-sm text-emerald-600" }, exercise.coach),
-                  React.createElement("p", { className: "text-sm text-gray-500" }, exercise.level)
-                )
-              )
-            )
-          )
-        ),
-        React.createElement("div", { className: "fixed bottom-0 left-0 right-0 bg-white shadow-inner py-3 px-4 flex justify-around" },
-          React.createElement("div", { className: "text-emerald-600 text-center" },
-            React.createElement("svg", { className: "w-6 h-6 mx-auto mb-1", fill: "none", stroke: "currentColor", "stroke-width": "2", viewBox: "0 0 24 24" },
-              React.createElement("path", { d: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10 1h-3a1 1 0 00-1-1V10m-7 7h10" })
-            ),
-            React.createElement("span", { className: "text-xs" }, "Accueil")
-          ),
-          React.createElement("div", { className: "text-gray-400 text-center" },
-            React.createElement("svg", { className: "w-6 h-6 mx-auto mb-1", fill: "none", stroke: "currentColor", "stroke-width": "2", viewBox: "0 0 24 24" },
-              React.createElement("path", { d: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" })
-            ),
-            React.createElement("span", { className: "text-xs" }, "Historique")
-          ),
-          React.createElement("div", { className: "text-gray-400 text-center" },
-            React.createElement("svg", { className: "w-6 h-6 mx-auto mb-1", fill: "none", stroke: "currentColor", "stroke-width": "2", viewBox: "0 0 24 24" },
-              React.createElement("path", { d: "M13 7h8m0 0v8m0-8l-8 8-4-4" })
-            ),
-            React.createElement("span", { className: "text-xs" }, "Progression")
-          ),
-          React.createElement("div", { className: "text-gray-400 text-center" },
-            React.createElement("svg", { className: "w-6 h-6 mx-auto mb-1", fill: "none", stroke: "currentColor", "stroke-width": "2", viewBox: "0 0 24 24" },
-              React.createElement("path", { d: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a6 6 0 00-6 6v2h12v-2a6 6 0 00-6-6z" })
-            ),
-            React.createElement("span", { className: "text-xs" }, "Profil")
-          )
-        )
-      );
-    };
-
-    const ViewSelectionScreen = ({ exercise, onNavigate }) => {
-      return React.createElement("div", { className: "min-h-screen bg-gray-50 animate-fade" },
-        React.createElement("div", { className: "bg-white shadow-md p-4" },
-          React.createElement("h1", { className: "text-xl font-bold text-emerald-700" }, "Choix de la vue")
-        ),
-        React.createElement("div", { className: "p-4" },
-          React.createElement("h2", { className: "text-lg font-bold text-gray-800 mb-4" }, "Quelle vue utiliser pour cette séance ?"),
-          React.createElement("p", { className: "text-gray-600 mb-4" }, "Choisis l'angle qui correspond à ton installation actuelle."),
-          React.createElement(Card, { className: "space-y-4" },
-            React.createElement(Button, { 
-              fullWidth: true, 
-              onClick: () => onNavigate('calibration', exercise, 'front')
-            }, "Vue de face"),
-            React.createElement("p", { className: "text-center text-gray-500" }, "OU"),
-            React.createElement(Button, { 
-              fullWidth: true, 
-              variant: "outline",
-              onClick: () => onNavigate('calibration', exercise, 'side')
-            }, "Vue de profil")
-          ),
-          React.createElement("div", { className: "bg-emerald-50 p-4 rounded-xl mt-4" },
-            React.createElement("p", { className: "text-emerald-700 text-sm" }, "Conseil : Assure-toi d'avoir assez d'espace pour être entièrement visible.")
-          )
-        )
-      );
-    };
-
-    const CalibrationScreen = ({ exercise, view, onNavigate }) => {
-      const [distanceOk, setDistanceOk] = useState(false);
-      const [calibrating, setCalibrating] = useState(true);
-      
-      useEffect(() => {
-        if (calibrating) {
-          const timer = setTimeout(() => {
-            setDistanceOk(true);
-            setCalibrating(false);
-          }, 2000);
-          return () => clearTimeout(timer);
-        }
-      }, [calibrating]);
-      
-      return React.createElement("div", { className: "min-h-screen bg-gray-50 animate-fade" },
-        React.createElement("div", { className: "bg-white shadow-md p-4" },
-          React.createElement("h1", { className: "text-xl font-bold text-emerald-700" }, "Calibration")
-        ),
-        React.createElement("div", { className: "p-4" },
-          React.createElement("div", { className: "flex justify-center space-x-2 mb-4" },
-            React.createElement("div", { className: "w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center" }, "1"),
-            React.createElement("div", { className: "w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center" }, "2")
-          ),
-          React.createElement(Card, { className: "text-center py-8" },
-            React.createElement("p", { className: "text-gray-700 mb-2" }, "Veuillez vous placer face au téléphone, pieds visibles."),
-            React.createElement("div", { className: "relative bg-gray-200 rounded-2xl h-64 flex items-center justify-center" },
-              React.createElement("div", { className: "text-6xl" }, "🏃‍♀️"),
-              calibrating && React.createElement("div", { className: "absolute bottom-4 left-4 right-4 bg-blue-50 p-3 rounded-xl" },
-                React.createElement("p", { className: "text-blue-700 font-semibold" }, "Distance mesurée : 1,85 m"),
-                React.createElement("p", { className: "text-blue-600 text-sm" }, "Veuillez reculer de 15 cm")
-              ),
-              !calibrating && React.createElement("div", { className: "absolute bottom-4 left-4 right-4 bg-emerald-50 p-3 rounded-xl" },
-                React.createElement("p", { className: "text-emerald-700 font-semibold" }, "Distance idéale : 2,00 m"),
-                React.createElement("p", { className: "text-emerald-600 text-sm" }, "OK ✓")
-              )
-            )
-          ),
-          !calibrating && React.createElement("div", { className:mt-4" },
-            React.createElement("p", { className: "text-gray-700 mb-2" }, "Votre taille enregistrée :"),
-            React.createElement("div", { className: "text-2xl font-bold text-emerald-500 mb-4" }, "1,68 m"),
-            React.createElement("p", { className: "text-gray-600 mb-4" }, "Est-ce correct ?"),
-            React.createElement("div", { className: "flex space-x-3" },
-              React.createElement(Button, { className: "flex-1", variant: "secondary" }, "Modifier"),
-              React.createElement(Button, { className: "flex-1", onClick: () => onNavigate('exercise', exercise) }, "Confirmer")
-            )
-          )
-        )
-      );
-    };
-
-    const ExerciseScreen = ({ exercise, onNavigate }) => {
-      const [score, setScore] = useState(85);
-      const [reps, setReps] = useState(3);
-      const [time, setTime] = useState(28);
-      const [error, setError] = useState(null);
-      
-      return React.createElement("div", { className: "min-h-screen bg-gray-50 animate-fade" },
-        React.createElement("div", { className: "bg-white shadow-md p-4" },
-          React.createElement("h1", { className: "text-xl font-bold text-emerald-700" }, "Entraînement")
-        ),
-        React.createElement("div", { className: "p-4" },
-          React.createElement("div", { className: "relative bg-gray-800 rounded-2xl h-96 flex items-center justify-center" },
-            React.createElement("div", { className: "text-white text-center" },
-              React.createElement("div", { className: "text-6xl mb-4" }, exercise.icon),
-              React.createElement("p", { className: "text-gray-300" }, "Squelette en temps réel")
-            ),
-            React.createElement("div", { className: "absolute top-4 right-4" },
-              React.createElement("div", { className: `w-16 h-16 rounded-full flex items-center justify-center ${score >= 70 ? 'bg-emerald-500' : score >= 50 ? 'bg-yellow-500' : 'bg-red-500'}` },
-                React.createElement("span", { className: "text-white font-bold" }, score + "%")
-              ),
-              error && React.createElement("div", { className: "bg-red-100 p-2 rounded-lg mt-2 text-sm" }, error)
-            )
-          ),
-          React.createElement("div", { className: "mt-4" },
-            React.createElement("p", { className: "text-center text-gray-500" }, exercise.name + " | Série 1/3 | " + reps + " répétitions"),
-            React.createElement("p", { className: "text-center text-gray-500" }, "Temps: 00:" + String(time).padStart(2, '0'))
-          ),
-          React.createElement("div", { className: "flex space-x-3 mt-4" },
-            React.createElement(Button, { className: "flex-1", variant: "secondary" }, "Terminer"),
-            React.createElement(Button, { className: "flex-1" }, "Rejouer")
-          )
-        )
-      );
-    };
-
-    // Application principale
-    const App = () => {
-      const [currentScreen, setCurrentScreen] = useState('coach-login');
-      const [selectedExercise, setSelectedExercise] = useState(null);
-      const [clientData, setClientData] = useState(null);
-      const [viewType, setViewType] = useState(null);
-      
-      const handleNavigate = (screen, data = null, view = null) => {
-        setCurrentScreen(screen);
-        if (data) {
-          if (screen === 'config') {
-            setSelectedExercise(data);
-          } else if (screen === 'calibration') {
-            setSelectedExercise(data);
-            setViewType(view);
-          } else if (screen === 'exercise') {
-            setSelectedExercise(data);
-          }
-        }
-      };
-      
-      const renderScreen = () => {
-        switch (currentScreen) {
-          case 'coach-login':
-            return CoachLoginScreen({ onNavigate: (s) => setCurrentScreen(s) });
-          case 'dashboard':
-            return CoachDashboardScreen({ onNavigate: (s, d) => {
-              if (d) {
-                setClientData(d);
-                setCurrentScreen('client');
-              } else {
-                setCurrentScreen(s);
-              }
-            }});
-          case 'client':
-            return ClientProfileScreen({ client: clientData, onNavigate: (s) => setCurrentScreen(s) });
-          case 'library':
-            return ExerciseLibraryScreen({ onNavigate: (s, d) => {
-              if (d) {
-                setSelectedExercise(d);
-                setCurrentScreen('config');
-              } else {
-                setCurrentScreen(s);
-              }
-            }});
-          case 'config':
-            return KeyPointsConfigScreen({ exercise: selectedExercise, onNavigate: (s) => setCurrentScreen(s) });
-          case 'capture1':
-            return VideoCaptureScreen({ view: 1, exercise: selectedExercise, onNavigate: (s, v) => {
-              if (v) {
-                setCurrentScreen('verify' + v);
-              } else {
-                setCurrentScreen(s);
-              }
-            }});
-          case 'capture2':
-            return VideoCaptureScreen({ view: 2, exercise: selectedExercise, onNavigate: (s, v) => {
-              if (v) {
-                setCurrentScreen('verify' + v);
-              } else {
-                setCurrentScreen(s);
-              }
-            }});
-          case 'verify1':
-          case 'verify2':
-            return VerificationScreen({ view: currentScreen === 'verify1' ? 1 : 2, exercise: selectedExercise, onNavigate: (s, v) => {
-              if (v) {
-                setCurrentScreen('capture' + v);
-              } else {
-                setCurrentScreen(s);
-              }
-            }});
-          case 'summary':
-            return SummaryScreen({ exercise: selectedExercise, onNavigate: (s) => setCurrentScreen(s) });
-          case 'success':
-            return React.createElement("div", { className: "min-h-screen bg-gray-50 animate-fade flex items-center justify-center" },
-              React.createElement("div", { className: "text-center p-8" },
-                React.createElement("div", { className: "bg-emerald-500 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6" },
-                  React.createElement("svg", { className: "w-12 h-12 text-white", fill: "none", stroke: "currentColor", "stroke-width": "3", viewBox: "0 0 24 24" },
-                    React.createElement("path", { d: "M5 13l4 4L19 7", "stroke-linecap": "round", "stroke-linejoin": "round" })
-                  )
-                ),
-                React.createElement("h1", { className: "text-2xl font-bold text-emerald-700 mb-4" }, "Enregistré avec succès !"),
-                React.createElement("p", { className: "text-gray-600 mb-8" }, "L'exercice a été ajouté à la fiche du client"),
-                Button({ fullWidth: true, onClick: () => setCurrentScreen('dashboard') }, "Retour au tableau de bord")
-              )
+        createElement("div", { className: "p-4 grid grid-cols-2 gap-4" },
+          exercises.map(ex => {
+            return createElement(C, { className: "text-center cursor-pointer hover:bg-emerald-50" },
+              createElement("div", { className: "text-4xl mb-2" }, ex.icon),
+              createElement("h3", { className: "font-semibold text-gray-800" }, ex.name),
+              createElement("span", { className: "text-xs text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full mt-2 inline-block" }, ex.type)
             );
-          case 'user-home':
-            return UserHomeScreen({ onNavigate: (s, d, v) => {
-              if (d) {
-                setSelectedExercise(d);
-                setCurrentScreen(s);
-              } else {
-                setCurrentScreen(s);
-              }
-            }});
-          case 'view-select':
-            return ViewSelectionScreen({ exercise: selectedExercise, onNavigate: (s, d, v) => {
-              if (d) {
-                setSelectedExercise(d);
-                setViewType(v);
-                setCurrentScreen('calibration');
-              } else {
-                setCurrentScreen(s);
-              }
-            }});
-          case 'calibration':
-            return CalibrationScreen({ exercise: selectedExercise, view: viewType, onNavigate: (s, d) => {
-              if (d) {
-                setSelectedExercise(d);
-                setCurrentScreen('exercise');
-              } else {
-                setCurrentScreen(s);
-              }
-            }});
-          case 'exercise':
-            return ExerciseScreen({ exercise: selectedExercise, onNavigate: (s, d) => {
-              if (d) {
-                setSelectedExercise(d);
-              }
-              setCurrentScreen(s);
-            }});
-          default:
-            return CoachLoginScreen({ onNavigate: (s) => setCurrentScreen(s) });
-        }
-      };
-      
-      return React.createElement("div", null,
-        React.createElement("div", { className: "fixed top-4 left-4 bg-white p-2 rounded-lg shadow-md z-50" },
-          React.createElement("button", { className: "px-3 py-1 bg-emerald-500 text-white rounded-lg mr-2", onClick: () => setCurrentScreen('coach-login') }, "Coach"),
-          React.createElement("button", { className: "px-3 py-1 bg-gray-200 text-gray-700 rounded-lg", onClick: () => setCurrentScreen('user-home') }, "Utilisateur")
-        ),
-        renderScreen()
+          })
+        )
       );
-    };
+    }
 
-    // Rendu de l'application
-    ReactDOM.render(React.createElement(App), document.getElementById('root'));
+    function KeyPointsConfig() {
+      const points = ['Genoux', 'Hanches', 'Bas du dos', 'Chevilles', "\u00c9paules", 'Nuque'];
+      const [selected, setSelected] = useState(['Genoux', 'Hanches', 'Bas du dos', 'Chevilles']);
+      const toggle = (p) => { setSelected(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p]); };
+      return createElement("div", { className: "min-h-screen bg-gray-50 anim" },
+        createElement("div", { className: "bg-white shadow-md p-4" },
+          createElement("h1", { className: "text-xl font-bold text-emerald-700" }, "Configuration")
+        ),
+        createElement("div", { className: "p-4" },
+          createElement("h2", { className: "text-gray-700 font-semibold mb-4" }, "S\u00e9lectionnez les points cl\u00e9s \u00e0 surveiller"),
+          createElement(C, { className: "space-y-3" },
+            points.map(p => {
+              const sel = selected.includes(p);
+              return createElement("div", { className: "flex items-center justify-between p-3 rounded-xl cursor-pointer " + (sel ? "bg-emerald-50 border-2 border-emerald-500" : "bg-gray-50"), onClick: () => toggle(p)},
+                createElement("span", { className: "text-gray-700" }, p),
+                createElement("span", { className: "text-xl " + (sel ? "text-emerald-500" : "text-gray-400") }, sel ? "\u2713" : "\u25cb")
+              );
+            })
+          ),
+          Btn({ fullWidth: true, onClick: window.goCapture }, "Valider et continuer")
+        )
+      );
+    }
+
+    function VideoCapture() {
+      const [rec, setRec] = useState(false);
+      return createElement("div", { className: "min-h-screen bg-gray-50 anim" },
+        createElement("div", { className: "bg-white shadow-md p-4" },
+          createElement("h1", { className: "text-xl font-bold text-emerald-700" }, "Capture vid\u00e9o")
+        ),
+        createElement("div", { className: "p-4" },
+          createElement(C, { className: "text-center py-4" },
+            createElement("p", { className: "text-gray-700 mb-2" }, "Placez le client face \u00e0 la cam\u00e9ra, \u00e0 environ 2 m\u00e8tres")
+          ),
+          createElement("div", { className: "relative bg-gray-800 rounded-2xl overflow-hidden h-96 flex items-center justify-center my-4" },
+            createElement("div", { className: "text-white text-center" },
+              createElement("div", { className: "text-6xl mb-4" }, "\ud83d\udcaa"),
+              createElement("p", { className: "text-gray-300" }, "Pr\u00eat pour la capture"),
+              rec && createElement("div", { className: "mt-4 bg-red-500 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto animate-pulse" },
+                createElement("span", { className: "text-2xl font-bold" }, "5")
+              )
+            )
+          ),
+          createElement("div", { className: "flex justify-center space-x-4 mt-4" },
+            createElement("button", { className: "bg-gray-200 p-3 rounded-xl" }, "\u26a1"),
+            createElement("button", { className: "bg-gray-200 p-3 rounded-xl" }, "\ud83d\udcf7"),
+            createElement("button", { className: "p-4 rounded-full " + (rec ? "bg-red-500" : "bg-emerald-500"), onClick: () => setRec(!rec)}, rec ? "\u25a0" : "\u25cf")
+          ),
+          createElement("p", { className: "text-center text-gray-500 mt-2" }, "Appuyez pour d\u00e9marrer (5 secondes)"),
+          Btn({ fullWidth: true, className: "mt-4", onClick: window.goVerify }, "V\u00e9rifier la capture")
+        )
+      );
+    }
+
+    function Verification() {
+      return createElement("div", { className: "min-h-screen bg-gray-50 anim" },
+        createElement("div", { className: "bg-white shadow-md p-4" },
+          createElement("h1", { className: "text-xl font-bold text-emerald-700" }, "V\u00e9rification")
+        ),
+        createElement("div", { className: "p-4" },
+          createElement("div", { className: "relative bg-gray-800 rounded-2xl overflow-hidden h-96 flex items-center justify-center" },
+            createElement("div", { className: "text-white text-center" },
+              createElement("div", { className: "text-6xl mb-4" }, "\ud83d\udcaa"),
+              createElement("p", { className: "text-gray-300" }, "Squelette d\u00e9tect\u00e9")
+            )
+          ),
+          createElement("div", { className: "mt-4" },
+            createElement("div", { className: "h-2 bg-gray-200 rounded-full overflow-hidden" },
+              createElement("div", { className: "h-full bg-emerald-500 w-3/4" })
+            ),
+            createElement("p", { className: "text-center text-gray-500 mt-1" }, "0:02 / 0:05")
+          ),
+          createElement("div", { className: "bg-emerald-50 p-4 rounded-xl mt-4" },
+            createElement("div", { className: "flex items-center space-x-2" },
+              createElement("span", { className: "text-emerald-500 text-xl" }, "\u2713"),
+              createElement("span", { className: "text-emerald-700 font-semibold" }, "Tous les points cl\u00e9s sont bien d\u00e9tect\u00e9s")
+            )
+          ),
+          createElement("div", { className: "flex space-x-3 mt-4" },
+            Btn({ className: "flex-1", variant: "secondary" }, "Refaire"),
+            Btn({ className: "flex-1", variant: "outline" }, "Supprimer"),
+            Btn({ className: "flex-1", onClick: window.goSummary }, "Valider")
+          )
+        )
+      );
+    }
+
+    function SummaryScreen() {
+      return createElement("div", { className: "min-h-screen bg-gray-50 anim" },
+        createElement("div", { className: "bg-white shadow-md p-4" },
+          createElement("h1", { className: "text-xl font-bold text-emerald-700" }, "\u00c9cran bloqu\u00e9 - En attente")
+        ),
+        createElement("div", { className: "p-4" },
+          createElement(C, { className: "text-center py-8" },
+            createElement("h2", { className: "text-xl font-bold text-gray-800 mb-4" }, "Posture Coach"),
+            createElement("p", { className: "text-gray-600 mb-4" }, "Application d'entra\u00eenement intelligent"),
+            createElement("p", { className: "text-gray-500" }, "Interface d\u00e9monstration")
+          )
+        )
+      );
+    }
+
+    function UserHome() {
+      const exercises = [
+        { name: "Squat", level: "Interm\u00e9diaire", icon: "\ud83d\udcaa" },
+        { name: "Fentes", level: "Interm\u00e9diaire", icon: "\ud83e\udeb2" },
+        { name: "Gainage", level: "Interm\u00e9diaire", icon: "\ud83e\uddd8" },
+        { name: "Soulev\u00e9 de terre", level: "Avanc\u00e9", icon: "\ud83c\udfcb" }
+      ];
+      return createElement("div", { className: "min-h-screen bg-gray-50 anim" },
+        createElement("div", { className: "bg-white shadow-md p-4" },
+          createElement("h1", { className: "text-xl font-bold text-emerald-700" }, "Bonjour Sarah \ud83d\udc4b"),
+          createElement("p", { className: "text-gray-600" }, "Pr\u00eate pour ta s\u00e9ance ?")
+        ),
+        createElement("div", { className: "p-4" },
+          createElement("h2", { className: "text-lg font-bold text-gray-800 mb-4" }, "MES EXERCICES"),
+          createElement("div", { className: "space-y-3" },
+            exercises.map((ex, i) => {
+              return createElement(C, { className: "flex items-center space-x-4 cursor-pointer hover:bg-emerald-50" },
+                createElement("div", { className: "text-4xl" }, ex.icon),
+                createElement("div", { className: "flex-1" },
+                  createElement("h3", { className: "font-semibold text-gray-800" }, ex.name),
+                  createElement("p", { className: "text-sm text-gray-500" }, ex.level)
+                )
+              );
+            })
+          )
+        ),
+        createElement("div", { className: "fixed bottom-0 left-0 right-0 bg-white shadow-inner py-3 px-4 flex justify-around" },
+          createElement("div", { className: "text-emerald-600 text-center" }, createElement("span", { className: "text-xs" }, "Accueil")),
+          createElement("div", { className: "text-gray-400 text-center" }, createElement("span", { className: "text-xs" }, "Historique")),
+          createElement("div", { className: "text-gray-400 text-center" }, createElement("span", { className: "text-xs" }, "Progression")),
+          createElement("div", { className: "text-gray-400 text-center" }, createElement("span", { className: "text-xs" }, "Profil"))
+        )
+      );
+    }
+
+    function App() {
+      const [screen, setScreen] = useState('mode');
+
+      // Fonctions de navigation
+      const goTo = {
+        mode: () => setScreen('mode'),
+        coachLogin: () => setScreen('coachLogin'),
+        dashboard: () => setScreen('dashboard'),
+        library: () => setScreen('library'),
+        config: () => setScreen('config'),
+        capture: () => setScreen('capture'),
+        verify: () => setScreen('verify'),
+        summary: () => setScreen('summary'),
+        userHome: () => setScreen('userHome')
+      };
+
+      // Exposer les fonctions globales
+      window.goDashboard = goTo.dashboard;
+      window.goLibrary = goTo.library;
+      window.goConfig = goTo.config;
+      window.goCapture = goTo.capture;
+      window.goVerify = goTo.verify;
+      window.goSummary = goTo.summary;
+
+      // Rendu selon l'\u00e9cran
+      if (screen === 'mode') {
+        return createElement("div", { className: "min-h-screen bg-gradient-to-br from-emerald-50 to-emerald-100 flex items-center justify-center p-6 anim" },
+          createElement("div", { className: "max-w-md text-center" },
+            createElement("div", { className: "bg-emerald-500 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4" },
+              createElement("span", { className: "text-white text-3xl" }, "\u2713")
+            ),
+            createElement("h1", { className: "text-2xl font-bold text-emerald-700 mb-2" }, "POSTURE COACH"),
+            createElement("p", { className: "text-gray-600 mb-8" }, "Application d'entra\u00eenement intelligent"),
+            Btn({ fullWidth: true, onClick: goTo.coachLogin }, "Mode Coach"),
+            createElement("p", { className: "text-gray-500 my-4" }, "OU"),
+            Btn({ fullWidth: true, variant: "outline", onClick: goTo.userHome }, "Mode Utilisateur")
+          )
+        );
+      }
+      if (screen === 'coachLogin') return CoachLogin();
+      if (screen === 'dashboard') return CoachDashboard();
+      if (screen === 'library') return ExerciseLibrary();
+      if (screen === 'config') return KeyPointsConfig();
+      if (screen === 'capture') return VideoCapture();
+      if (screen === 'verify') return Verification();
+      if (screen === 'summary') return SummaryScreen();
+      if (screen === 'userHome') return UserHome();
+      return null;
+    }
+
+    ReactDOM.render(createElement(App), document.getElementById('root'));
   </script>
 </body>
 </html>
